@@ -1,5 +1,5 @@
 import { ConversionEngine } from './modules/engine.js';
-import { presets, buildArgs, validateFile } from './modules/presets.js';
+import { presets, buildArgs, validateFile, describeOutput } from './modules/presets.js';
 const $ = (id) => document.getElementById(id);
 let engine = new ConversionEngine();
 let file = null, sourceURL = null, resultURL = null, busy = false, run = 0;
@@ -14,7 +14,7 @@ function setBusy(value) {
   ['fps','duration'].forEach(id => $(id).disabled = value || $('format').value !== 'gif');
   $('convert').disabled = value || !file;
   $('cancel').hidden = !value;
-  $('engine-status').textContent = value ? 'ENGINE RUNNING' : 'ENGINE STANDBY';
+  $('engine-status').textContent = value ? '처리 중' : '대기 중';
 }
 function selectFile(next) {
   if (busy) return;
@@ -44,15 +44,15 @@ $('remove').addEventListener('click', () => {
   URL.revokeObjectURL(sourceURL); sourceURL = null;
   $('source-video').removeAttribute('src'); $('source-video').load(); $('source-preview').hidden = true;
   $('file-title').textContent = '영상을 여기에 드롭하세요'; $('file-meta').textContent = '또는 클릭하여 파일 선택';
-  $('progress').hidden = true; status('ready. 변환할 영상을 선택하세요.'); setBusy(false);
+  $('progress').hidden = true; status('변환할 영상을 선택하세요.'); setBusy(false);
 });
 function updateOptions() {
   const value = options();
   $('gif-options').hidden = value.format !== 'gif';
   ['fps','duration'].forEach(id => $(id).disabled = value.format !== 'gif');
   $('resolution').disabled = value.format === 'mp3';
-  $('setting-hint').textContent = { mp4: '호환성이 좋은 H.264 + AAC 형식으로 변환합니다.', gif: '영상 시작부터 최대 30초. GIF에는 소리가 포함되지 않습니다.', mp3: '원본 영상에 오디오 트랙이 있어야 합니다. 해상도는 적용되지 않습니다.' }[value.format];
-  $('command').textContent = `convert --to ${value.format} --quality ${value.quality}${value.format !== 'mp3' && value.resolution !== 'original' ? ` --height ${value.resolution}` : ''}`;
+  $('setting-hint').textContent = { mp4: 'MP4 영상 품질을 조절합니다. 오디오는 AAC 128kbps로 고정됩니다.', gif: '영상 시작부터 최대 30초. 시작점 지정은 지원하지 않으며 소리는 제외됩니다.', mp3: '원본 영상에 오디오 트랙이 있어야 합니다. 해상도는 적용되지 않습니다.' }[value.format];
+  $('output-summary').textContent = describeOutput(value);
   clearResult();
 }
 ['format','resolution','quality','fps','duration'].forEach(id => $(id).addEventListener('change', updateOptions));
@@ -86,7 +86,7 @@ $('convert-form').addEventListener('submit', async e => {
     const preview = document.createElement(selected.format === 'gif' ? 'img' : selected.format === 'mp3' ? 'audio' : 'video');
     preview.src = resultURL; if (selected.format === 'gif') preview.alt = '변환된 GIF 미리보기'; else preview.controls = true;
     $('output-preview').replaceChildren(preview); $('result').hidden = false; $('progress').value = 100;
-    status('done. 변환 완료! 파일을 다운로드하세요.');
+    status('변환 완료. 파일을 다운로드하세요.');
   } catch (error) {
     if (current === run) { status(`오류: ${error.message || '메모리가 부족하거나 파일을 읽을 수 없습니다. 더 작은 파일로 다시 시도해 주세요.'}`); $('progress').hidden = true; }
   } finally { if (current === run) setBusy(false); }

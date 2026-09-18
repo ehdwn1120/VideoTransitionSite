@@ -6,7 +6,7 @@
 
 - 실제 기능: WebM→MP4, MP4→GIF, MP4→MP3를 브라우저에서 실행해 결과 생성 확인.
 - 엔진 테스트: 생성 파일의 헤더 및 전체 디코딩, 1280×720→854×480 축소, 무음 영상 MP3 실패, 손상 파일 실패 검증.
-- 본문 콘텐츠: 메인 페이지에 사용 방법, 기능별 활용 예시, 추천 설정, 포맷 비교표, 압축·해상도·메모리 관련 팁, FAQ 7개. JavaScript를 실행하지 않아도 읽을 수 있는 HTML입니다.
+- 본문 콘텐츠: 메인 페이지에 사용 방법, 기능별 활용 예시, 실제 출력 설정, 포맷 비교표, 압축·해상도 관련 팁, FAQ 7개. JavaScript를 실행하지 않아도 읽을 수 있는 HTML입니다.
 - 신뢰 정보: 소개, 개인정보처리방침, 문의 페이지. 운영자 ew, 문의 ehh1120@naver.com. 실제 mailto 링크이며 문의가 전송되었다고 가장하는 폼은 없습니다.
 - 모든 페이지에서 소개·개인정보·문의 페이지로 이동할 수 있습니다.
 - 페이지별 제목과 description, 한국어 lang, H1, 반응형 레이아웃, favicon, 404 페이지.
@@ -39,3 +39,9 @@ Google은 독창적이고 유용한 콘텐츠와 명확한 탐색을 강조합�
 - CMP 요구사항: https://support.google.com/adsense/answer/13554116?hl=ko
 - 사이트맵: https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap
 - canonical: https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls
+
+## 카피·SEO 정리
+
+장식용 셸 명령과 상태 문구, 반복되는 특징·활용 카드, 고정 버전 라벨을 줄였습니다. MP4의 AAC 128kbps와 MP3의 품질별 비트레이트를 구분하고 GIF는 앞부분만 지원한다고 명시합니다. 설정 요약은 실제 인코딩 설정과 공용 상수를 사용합니다.
+
+검색용으로 숨긴 문구, 키워드 나열, 가짜 후기·평점은 추가하지 않습니다. 메인 페이지의 실사용 안내와 별도 상세 가이드, 정책·문의 링크를 유지합니다. 디자인·문구 변경 자체가 검색 노출이나 AdSense 승인을 보장하지 않습니다. 공개 도메인 및 실제 광고 설정 점검은 여전히 필요합니다.
