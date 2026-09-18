@@ -1,0 +1,74 @@
+# Morfliq
+
+HTML + CSS + ES 모듈 기반 브라우저 비디오 변환기. 런타임 백엔드, 영상 업로드 API, 계정, 분석·광고 스크립트가 없습니다. Vite는 개발 및 정적 파일 번들링에만 사용합니다.
+
+## 실행
+
+Node.js 22.12 이상 권장.
+
+```sh
+npm ci
+npm run build
+npm run preview
+```
+
+개발 중에는 먼저 `node scripts/prepare-core.mjs` 실행 후 `npm run dev`를 사용하세요. `index.html`을 file://로 직접 열면 Worker가 실행되지 않습니다. HTTPS 또는 localhost 서버가 필요합니다.
+
+## Cloudflare Pages 배포
+
+- Git 저장소에 소스를 올린 뒤 Pages 프로젝트에 연결합니다.
+- Framework preset: None
+- Build command: `npm run build`
+- Build output directory: `dist`
+- Production 환경 변수 `SITE_URL`: 실제 공개 주소의 HTTPS origin (예: `https://your-domain.com`, 경로 없이).
+- `SITE_URL`이 없으면 Cloudflare의 `CF_PAGES_URL`을 사용합니다. 둘 다 없으면 로컬 미리보기용 `noindex` 빌드를 만들며 robots.txt는 접근을 허용하고 페이지의 noindex로 색인을 제한합니다. sitemap은 비워 둡니다.
+- 커스텀 도메인을 연결하거나 도메인을 변경한 뒤에는 `SITE_URL`을 설정하고 다시 빌드하세요.
+- Direct Upload를 사용하려면 로컬에서 `SITE_URL=https://실제도메인 npm run build` 후 생성된 **dist 폴더만** 업로드하세요. node_modules나 프로젝트 전체는 업로드하지 마세요.
+- Pages는 `.html` 페이지를 확장자 없는 URL로 리디렉션하므로 canonical 및 sitemap은 `/guide`, `/formats`, `/about`, `/privacy`, `/contact`를 사용합니다.
+
+`@ffmpeg/core` WASM은 Pages의 파일당 25MiB 제한보다 큽니다. 빌드가 16MiB 이하 `.bin` 조각으로 나누며 브라우저가 같은 origin에서 받아 Blob으로 합칩니다. R2, 외부 CDN 또는 서버가 필요하지 않습니다. 단일 스레드 엔진을 사용하므로 COOP/COEP와 SharedArrayBuffer도 필요하지 않습니다. `public/_headers`는 Worker와 WASM 실행을 허용하는 CSP 및 기본 보안 헤더를 제공합니다. 향후 광고를 실제 도입할 때 해당 도메인과 동의 흐름에 맞춰 CSP를 수정해야 합니다.
+
+## 구조
+
+- `index.html`: 변환 화면, 빠른 가이드, FAQ
+- `guide.html`, `formats.html`, `about.html`, `privacy.html`, `contact.html`: 검색 가능한 정적 콘텐츠
+- `src/main.js`: 파일 선택, UI 상태, 진행률, 결과 다운로드
+- `src/modules/engine.js`: 엔진 로딩과 변환 수명주기, 취소
+- `src/modules/presets.js`: 포맷 정의, 파일 검증, FFmpeg 명령 생성
+- `src/style.css`: 테마 토큰, 반응형 레이아웃, 모션 감소 대응
+- `scripts/prepare-core.mjs`: 로컬 엔진 파일 패키징
+- `scripts/seo.mjs`: 도메인 기반 canonical, robots.txt, sitemap.xml 생성 및 Pages 크기 검사
+- `site.config.json`: 사이트명, 공개 도메인, 문의 이메일과 운영자 설정
+- `tests/presets.test.mjs`: 변환 옵션과 입력 제한 테스트
+
+새 포맷은 `presets.js`의 메타데이터와 명령 생성 분기에 추가하고 UI 선택지를 연결하세요. 다른 영상 처리 도구는 별도 모듈로 분리하고 `ConversionEngine`을 재사용할 수 있습니다.
+
+## 동작과 제한
+
+입력: MP4 / WebM / MOV / MKV / M4V, 200MiB 이하. 내부 코덱에 따라 지원 여부가 달라집니다. 출력: MP4 (H.264/AAC), GIF (최대 30초), MP3. 해상도는 높이 기준이며 업스케일하지 않습니다. 품질 기반 압축이므로 목표 바이트 크기를 보장하지 않습니다. 큰 파일은 메모리 제한으로 실패할 수 있습니다.
+
+변환 엔진은 실행 시에만 로드합니다. 완료·실패·취소 시 Worker를 종료해 작업 메모리를 해제합니다. 결과 Blob은 다운로드와 미리보기를 위해 유지하고 파일 제거·설정 변경·페이지 종료 시 해제합니다. 출력 파일은 서버에 저장되지 않습니다.
+
+## 운영자 및 공개 설정
+
+문의: ehh1120@naver.com, 운영자: ew. `site.config.json`에 저장되어 있습니다. 공개 도메인은 미정이므로 url이 비어 있습니다. 실제 URL을 설정하면 사이트맵 6개 URL과 canonical, 구조화 데이터가 빌드에 반영됩니다. `CONTACT_EMAIL`, `OPERATOR_NAME`, `SITE_URL` 환경 변수로 덮어쓸 수 있습니다. Cloudflare의 production 브랜치가 main이 아니면 `PRODUCTION_BRANCH`도 설정하세요. 프리뷰 브랜치 및 `SITE_NOINDEX=1` 빌드는 noindex입니다.
+
+`npm run check:release`로 공개 설정 누락을 점검하세요. 현재 도메인이 없어 이 검사는 의도적으로 실패합니다. 기술·콘텐츠 점검 내역과 AdSense 연결 시 남은 단계는 [ADSENSE_READINESS.md](ADSENSE_READINESS.md)에 정리했습니다. AdSense 승인은 Google이 판단하며 현재 광고 계정은 연결되어 있지 않습니다.
+
+## 검증
+
+```sh
+npm run build
+npm test
+node scripts/create-fixture.mjs
+```
+
+마지막 명령은 개인 영상 대신 합성 패턴·음성으로 구성된 1초 MP4/WebM을 tests/fixtures에 만듭니다. 이 테스트 파일은 dist에 배포되지 않습니다.
+
+## 참고
+
+- https://ffmpegwasm.netlify.app/docs/getting-started/usage/
+- https://developers.cloudflare.com/pages/platform/limits/
+- https://developers.cloudflare.com/pages/configuration/headers/
+
+엔진과 코덱의 라이선스는 각 프로젝트에 따릅니다. 배포 엔진 버전에 해당하는 고지와 소스 정보는 `THIRD_PARTY_NOTICES.md`를 참고하세요.
