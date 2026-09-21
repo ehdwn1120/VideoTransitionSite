@@ -78,3 +78,11 @@ node scripts/create-fixture.mjs
 `site.config.json`의 `searchVerification.naver` / `searchVerification.bing` 또는 `NAVER_SITE_VERIFICATION` / `BING_SITE_VERIFICATION` 환경 변수에 각 서비스가 발급한 content 값만 넣고 다시 빌드하세요. 빈 값은 태그로 출력하지 않으며, 공개 홈페이지에만 출력합니다. Google의 기존 설정과 AdSense 태그는 유지합니다.
 
 등록 단계와 실제 확인 결과는 [SEARCH_VISIBILITY.md](SEARCH_VISIBILITY.md)에 기록했습니다. 사이트맵 주소는 https://morfliq.win/sitemap.xml 입니다.
+
+### 이미지 자동 감지 및 변환
+
+같은 업로드 창에서 JPG/JPEG·PNG·WebP는 이미지 옵션, MP4·WebM·MOV·MKV·M4V는 영상 옵션으로 전환됩니다. `src/modules/media.js`는 종류 판별·크기 계산·이미지 포맷 정의를, `src/modules/image-engine.js`는 디코딩과 Canvas 인코딩·취소·자원 해제를 담당합니다. 영상 엔진과 독립적으로 동작하며 이미지 작업에는 FFmpeg 다운로드가 발생하지 않습니다.
+
+정지 이미지에 한해 최대 200MB/4천만 픽셀을 지원합니다. PNG·WebP 투명도를 유지하고 JPG의 투명 영역은 흰색으로 채웁니다. 원본 메타데이터는 복사하지 않습니다. 움직이는 PNG/WebP, GIF·HEIC·AVIF 입력은 지원하지 않습니다.
+
+브라우저 통합 테스트: 개발 서버를 켠 후 `TEST_URL=http://127.0.0.1:4175 node tests/browser.mjs`를 실행합니다. Playwright Chromium이 필요하며 기존 설치를 사용할 경우 `BROWSER_PATH`에 실행 파일 경로를 지정할 수 있습니다. 실제 이미지 9개 변환 조합, 투명도·해상도·다운로드, 오류 및 취소 처리, 영상 3개 변환 조합, 모바일 가로 넘침을 검사합니다.

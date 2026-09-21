@@ -32,7 +32,7 @@ for (const page of pages) {
     const schema = {'@context':'https://schema.org','@graph':[
       {'@type':'WebSite','@id':`${origin}/#website`,name:config.name,url:`${origin}/`,inLanguage:'ko'},
       {'@type':page === 'contact' ? 'ContactPage' : page === 'about' ? 'AboutPage' : 'WebPage', '@id':`${url}#page`,url,name:title,description,inLanguage:'ko',isPartOf:{'@id':`${origin}/#website`}},
-      ...(page === 'index' ? [{'@type':'WebApplication',name:config.name,url,applicationCategory:'MultimediaApplication',operatingSystem:'Web browser',browserRequirements:'Requires JavaScript, WebAssembly and Web Workers',isAccessibleForFree:true,featureList:['MP4 변환','GIF 생성','MP3 추출','해상도 및 품질 조절']}] : [{'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:config.name,item:`${origin}/`},{'@type':'ListItem',position:2,name:title.split(' | ')[0],item:url}]}])
+      ...(page === 'index' ? [{'@type':'WebApplication',name:config.name,url,applicationCategory:'MultimediaApplication',operatingSystem:'Web browser',browserRequirements:'Requires JavaScript, WebAssembly and Web Workers',isAccessibleForFree:true,featureList:['JPG·PNG·WebP 이미지 변환','MP4 변환','GIF 생성','MP3 추출','해상도 및 품질 조절']}] : [{'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:config.name,item:`${origin}/`},{'@type':'ListItem',position:2,name:title.split(' | ')[0],item:url}]}])
     ]};
     const json = JSON.stringify(schema).replace(/</g,'\\u003c');
     hashes.push(`'sha256-${createHash('sha256').update(json).digest('base64')}'`);
