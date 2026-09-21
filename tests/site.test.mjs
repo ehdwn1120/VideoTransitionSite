@@ -28,7 +28,7 @@ test('Production sitemap, canonical, structured data and preview noindex',async(
  await cp('dist',join(dir,'dist'),{recursive:true});
  await cp('site.config.json',join(dir,'site.config.json'));await mkdir(join(dir,'public'));
  await cp('public/_headers',join(dir,'public/_headers'));
- const env={...process.env,SITE_URL:'https://morfliq.example',CF_PAGES:'1',CF_PAGES_BRANCH:'main',CF_PAGES_URL:'https://different-project.pages.dev',SITE_NOINDEX:''};
+ const env={...process.env,SITE_URL:'https://morfliq.example',CF_PAGES:'1',CF_PAGES_BRANCH:'main',CF_PAGES_URL:'https://different-project.pages.dev',SITE_NOINDEX:'',NAVER_SITE_VERIFICATION:'test-naver-token',BING_SITE_VERIFICATION:'test-bing-token'};
  const run=()=>execFileSync(process.execPath,[resolve('scripts/seo.mjs')],{cwd:dir,env});
  run();run();
  const sitemap=await readFile(join(dir,'dist/sitemap.xml'),'utf8');
@@ -37,6 +37,8 @@ test('Production sitemap, canonical, structured data and preview noindex',async(
  const headers=await readFile(join(dir,'dist/_headers'),'utf8');
  for(const page of pages){
   const html=await readFile(join(dir,`dist/${page}.html`),'utf8');
+  if(page === 'index') assert.match(html,/name="naver-site-verification" content="test-naver-token"/);
+  else assert.ok(!html.includes('naver-site-verification'));
   assert.equal((html.match(/rel="canonical"/g)||[]).length,1);assert.ok(!html.includes('content="noindex'));
   const json=html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1];assert.ok(JSON.parse(json)['@graph']);
   assert.ok(headers.includes(createHash('sha256').update(json).digest('base64')));

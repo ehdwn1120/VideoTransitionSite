@@ -21,7 +21,7 @@ npm run preview
 - Build command: `npm run build`
 - Build output directory: `dist`
 - Production 환경 변수 `SITE_URL`: 실제 공개 주소의 HTTPS origin (예: `https://your-domain.com`, 경로 없이).
-- `SITE_URL`이 없으면 Cloudflare의 `CF_PAGES_URL`을 사용합니다. 둘 다 없으면 로컬 미리보기용 `noindex` 빌드를 만들며 robots.txt는 접근을 허용하고 페이지의 noindex로 색인을 제한합니다. sitemap은 비워 둡니다.
+- `SITE_URL`, `site.config.json`의 `url`, Cloudflare의 `CF_PAGES_URL` 순서로 공개 주소를 선택합니다. 모두 없으면 로컬 미리보기용 `noindex` 빌드를 만들며 robots.txt는 접근을 허용하고 페이지의 noindex로 색인을 제한합니다. sitemap은 비워 둡니다.
 - 커스텀 도메인을 연결하거나 도메인을 변경한 뒤에는 `SITE_URL`을 설정하고 다시 빌드하세요.
 - Direct Upload를 사용하려면 로컬에서 `SITE_URL=https://실제도메인 npm run build` 후 생성된 **dist 폴더만** 업로드하세요. node_modules나 프로젝트 전체는 업로드하지 마세요.
 - Pages는 `.html` 페이지를 확장자 없는 URL로 리디렉션하므로 canonical 및 sitemap은 `/guide`, `/formats`, `/about`, `/privacy`, `/contact`를 사용합니다.
@@ -51,9 +51,9 @@ npm run preview
 
 ## 운영자 및 공개 설정
 
-문의: ehh1120@naver.com, 운영자: ew. `site.config.json`에 저장되어 있습니다. 공개 도메인은 미정이므로 url이 비어 있습니다. 실제 URL을 설정하면 사이트맵 6개 URL과 canonical, 구조화 데이터가 빌드에 반영됩니다. `CONTACT_EMAIL`, `OPERATOR_NAME`, `SITE_URL` 환경 변수로 덮어쓸 수 있습니다. Cloudflare의 production 브랜치가 main이 아니면 `PRODUCTION_BRANCH`도 설정하세요. 프리뷰 브랜치 및 `SITE_NOINDEX=1` 빌드는 noindex입니다.
+문의: ehh1120@naver.com, 운영자: ew. `site.config.json`에 저장되어 있습니다. 공개 도메인은 `https://morfliq.win`입니다. 이 주소를 기준으로 사이트맵 6개 URL과 canonical, 구조화 데이터가 빌드에 반영됩니다. `CONTACT_EMAIL`, `OPERATOR_NAME`, `SITE_URL` 환경 변수로 덮어쓸 수 있습니다. Cloudflare의 production 브랜치가 main이 아니면 `PRODUCTION_BRANCH`도 설정하세요. 프리뷰 브랜치 및 `SITE_NOINDEX=1` 빌드는 noindex입니다.
 
-`npm run check:release`로 공개 설정 누락을 점검하세요. 현재 도메인이 없어 이 검사는 의도적으로 실패합니다. 기술·콘텐츠 점검 내역과 AdSense 연결 시 남은 단계는 [ADSENSE_READINESS.md](ADSENSE_READINESS.md)에 정리했습니다. AdSense 승인은 Google이 판단하며 현재 광고 계정은 연결되어 있지 않습니다.
+`npm run check:release`로 공개 설정 누락을 점검하세요. 현재 공개 도메인이 설정되어 이 검사를 통과합니다. 기술·콘텐츠 점검 내역과 AdSense 연결 시 남은 단계는 [ADSENSE_READINESS.md](ADSENSE_READINESS.md)에 정리했습니다. AdSense 승인은 Google이 판단하며 AdSense 소유확인 메타 태그와 ads.txt가 있으며, 계정 승인 상태는 별도 확인이 필요합니다.
 
 ## 검증
 
@@ -72,3 +72,9 @@ node scripts/create-fixture.mjs
 - https://developers.cloudflare.com/pages/configuration/headers/
 
 엔진과 코덱의 라이선스는 각 프로젝트에 따릅니다. 배포 엔진 버전에 해당하는 고지와 소스 정보는 `THIRD_PARTY_NOTICES.md`를 참고하세요.
+
+## 네이버·Bing 검색 등록
+
+`site.config.json`의 `searchVerification.naver` / `searchVerification.bing` 또는 `NAVER_SITE_VERIFICATION` / `BING_SITE_VERIFICATION` 환경 변수에 각 서비스가 발급한 content 값만 넣고 다시 빌드하세요. 빈 값은 태그로 출력하지 않으며, 공개 홈페이지에만 출력합니다. Google의 기존 설정과 AdSense 태그는 유지합니다.
+
+등록 단계와 실제 확인 결과는 [SEARCH_VISIBILITY.md](SEARCH_VISIBILITY.md)에 기록했습니다. 사이트맵 주소는 https://morfliq.win/sitemap.xml 입니다.

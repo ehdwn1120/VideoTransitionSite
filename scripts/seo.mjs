@@ -1,3 +1,4 @@
+import { escapeHtml as escape, verificationMeta } from './lib/search-verification.mjs';
 import { readFile, writeFile, readdir, stat } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 const config = JSON.parse(await readFile('site.config.json', 'utf8'));
@@ -5,7 +6,6 @@ const raw = process.env.SITE_URL || config.url || process.env.CF_PAGES_URL;
 const contact = process.env.CONTACT_EMAIL || config.contactEmail;
 const operator = process.env.OPERATOR_NAME || config.operatorName;
 const pages = ['index', 'guide', 'formats', 'about', 'privacy', 'contact'];
-const escape = value => String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 let origin;
 if (raw) {
   const parsed = new URL(raw);
@@ -26,6 +26,7 @@ for (const page of pages) {
   const description = html.match(/<meta name="description" content="([^"]*)"/)?.[1] || '';
   const url = origin && `${origin}/${page === 'index' ? '' : page}`;
   let meta = `<meta name="robots" content="${indexable ? 'index, follow, max-image-preview:large' : 'noindex, follow'}"><meta property="og:site_name" content="${escape(config.name)}"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="${escape(title)}"><meta name="twitter:description" content="${escape(description)}">`;
+  meta += verificationMeta(config, process.env, indexable, page);
   if (origin) {
     meta += `<link rel="canonical" href="${escape(url)}"><meta property="og:url" content="${escape(url)}">`;
     const schema = {'@context':'https://schema.org','@graph':[

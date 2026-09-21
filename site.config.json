@@ -2,5 +2,9 @@
   "name": "Morfliq",
   "url": "https://morfliq.win",
   "contactEmail": "ehh1120@naver.com",
-  "operatorName": "ew"
+  "operatorName": "ew",
+  "searchVerification": {
+    "naver": "",
+    "bing": ""
+  }
 }
