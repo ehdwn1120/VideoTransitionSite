@@ -117,7 +117,7 @@ $('convert-form').addEventListener('submit', async e => {
     }, progress => {
       if (current !== run) return;
       const percent = Math.min(99, Math.max(0, Math.round(progress * 100)));
-      $('progress').value = percent; status(`변환 중… ${percent}% · 탭을 열어 두세요. (진행률은 추정치)`);
+      $('progress').value = percent; status(`변환 중… ${percent}% · 탭을 열어 두세요.`);
     }, (part,total) => { if(current === run) status(`변환 엔진 준비 중… ${part}/${total} 파일 로드 완료`); });
     }
     if (current !== run) return;

@@ -12,8 +12,8 @@ test('Media routing, limits and proportional image sizing', () => {
  assert.deepEqual(imageDimensions(600,1200,'480'),{width:240,height:480});
 });
 
-test('Video 1.1GB boundary is separate from image limit',()=>{
+test('Video 1GB boundary is separate from image limit',()=>{
  assert.equal(detectMedia({name:'large.avi',size:MAX_VIDEO_BYTES}),'video');
- assert.throws(()=>detectMedia({name:'large.avi',size:MAX_VIDEO_BYTES+1}),/1.1GB/);
+ assert.throws(()=>detectMedia({name:'large.avi',size:MAX_VIDEO_BYTES+1}),/1GB/);
  assert.throws(()=>detectMedia({name:'large.png',size:201*1024**2}),/200MB/);
 });

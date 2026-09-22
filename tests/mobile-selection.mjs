@@ -13,7 +13,7 @@ await page.evaluate(()=>{
  const file=new File(['x'],'large.AVI',{type:''});Object.defineProperty(file,'size',{value:Math.floor(1.1*1024**3)+1});
  const data=new DataTransfer();data.items.add(file);document.querySelector('#file').files=data.files;document.querySelector('#file').dispatchEvent(new Event('change'));
 });
-assert.match(await page.locator('#selection-message').textContent(),/large.AVI.*1.1GB/);
+assert.match(await page.locator('#selection-message').textContent(),/large.AVI.*1GB/);
 assert.equal(await page.locator('#convert').isDisabled(),true);
 await page.locator('#file').setInputFiles({name:'mobile.AVI',mimeType:'',buffer:await readFile('tests/fixtures/sample.avi')});
 assert.match(await page.locator('#selection-message').textContent(),/선택 완료.*mobile.AVI/);
