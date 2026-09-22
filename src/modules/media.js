@@ -1,3 +1,6 @@
+export const MAX_VIDEO_BYTES = Math.floor(1.1 * 1024 ** 3);
+export const MAX_IMAGE_BYTES = 200 * 1024 ** 2;
+export const LARGE_VIDEO_BYTES = MAX_IMAGE_BYTES;
 export const videoExtensions = ['mp4', 'webm', 'mov', 'mkv', 'm4v', 'avi'];
 export const imageFormats = {
   jpg: { label: 'JPG — 사진', mime: 'image/jpeg' },
@@ -6,10 +9,12 @@ export const imageFormats = {
 };
 export function detectMedia(file) {
   if (!file?.size) throw new Error('빈 파일은 변환할 수 없습니다.');
-  if (file.size > 200 * 1024 * 1024) throw new Error('200MB 이하 파일을 선택해 주세요.');
   const ext = file.name.split('.').at(-1).toLowerCase();
-  if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) return 'image';
-  if (videoExtensions.includes(ext)) return 'video';
+  const kind = ['jpg', 'jpeg', 'png', 'webp'].includes(ext) ? 'image' : videoExtensions.includes(ext) ? 'video' : null;
+  if (kind) {
+    if (file.size > (kind === 'video' ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES)) throw new Error(kind === 'video' ? '영상은 1.1GB 이하 파일을 선택해 주세요.' : '이미지는 200MB 이하 파일을 선택해 주세요.');
+    return kind;
+  }
   throw new Error('이미지는 JPG·PNG·WebP, 영상은 MP4·WebM·MOV·MKV·M4V·AVI를 지원합니다. GIF·HEIC·AVIF 이미지는 지원하지 않습니다.');
 }
 export function imageDimensions(width, height, resolution) {

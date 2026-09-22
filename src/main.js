@@ -1,6 +1,6 @@
 import { ConversionEngine } from './modules/engine.js';
 import { presets, buildArgs, validateFile, describeOutput } from './modules/presets.js';
-import { detectMedia, imageFormats, describeImage } from './modules/media.js';
+import { detectMedia, imageFormats, describeImage, LARGE_VIDEO_BYTES } from './modules/media.js';
 import { ImageEngine } from './modules/image-engine.js';
 const $ = (id) => document.getElementById(id);
 let engine = new ConversionEngine();
@@ -52,10 +52,12 @@ function selectFile(next) {
   $('source-video').removeAttribute('src'); $('source-video').load();
   $('source-image').removeAttribute('src');
   const isAVI = /\.avi$/i.test(file.name) || /(?:avi|msvideo)/i.test(file.type);
-  $('source-video').hidden = mediaKind === 'image' || isAVI;
+  const skipPreview = isAVI || (mediaKind === 'video' && file.size > LARGE_VIDEO_BYTES);
+  $('source-video').hidden = mediaKind === 'image' || skipPreview;
   $('source-image').hidden = mediaKind !== 'image';
-  if (!isAVI) $(mediaKind === 'image' ? 'source-image' : 'source-video').src = sourceURL;
-  else selectionMessage(`선택 완료: ${file.name} · ${size(file.size)}. AVI 원본 미리보기 없이 변환할 수 있습니다. 아래에서 변환 실행을 눌러 주세요.`);
+  if (!skipPreview) $(mediaKind === 'image' ? 'source-image' : 'source-video').src = sourceURL;
+  else selectionMessage(`선택 완료: ${file.name} · ${size(file.size)}. 원본 미리보기 없이 변환할 수 있습니다. 아래에서 변환 실행을 눌러 주세요.`);
+  if (mediaKind === 'video' && file.size > LARGE_VIDEO_BYTES) selectionMessage(`선택 완료: ${file.name} · ${size(file.size)}. 큰 영상은 PC 사용을 권장합니다. 모바일에서는 메모리 부족으로 실패하거나 탭이 종료될 수 있습니다. 원본 미리보기는 생략합니다.`);
   $('source-preview').hidden = false;
   $('progress').hidden = true;
   $('logs').textContent = '';

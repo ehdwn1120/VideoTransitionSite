@@ -7,7 +7,7 @@ test('MP4 keeps aspect ratio without enlarging and outputs compatible codecs',()
 });
 test('MP3 ignores video sizing and selects audio bitrate',()=>{const args=buildArgs('input.mp4',{...options,format:'mp3',quality:'small'});assert.ok(args.includes('-vn'));assert.ok(args.includes('128k'));assert.ok(!args.includes('-vf'));});
 test('GIF is bounded and uses palette generation',()=>{const args=buildArgs('input.mp4',{...options,format:'gif'});assert.ok(args.includes('-t'));assert.ok(args.some(a=>a.includes('palettegen')));assert.throws(()=>buildArgs('input.mp4',{...options,format:'gif',duration:31}));});
-test('Reject empty, unsupported and excessive input',()=>{assert.throws(()=>validateFile({name:'x.mp4',size:0}));assert.throws(()=>validateFile({name:'x.exe',size:1}));assert.throws(()=>validateFile({name:'x.mp4',size:201*1024*1024}));assert.doesNotThrow(()=>validateFile({name:'x.WEBM',size:1024}));});
+test('Reject empty, unsupported and excessive input',()=>{assert.throws(()=>validateFile({name:'x.mp4',size:0}));assert.throws(()=>validateFile({name:'x.exe',size:1}));assert.throws(()=>validateFile({name:'x.mp4',size:1.2*1024**3}));assert.doesNotThrow(()=>validateFile({name:'x.WEBM',size:1024}));});
 
 test('Displayed audio settings match encoding options',()=>{
  for(const quality of ['small','balanced','high']) for(const format of ['mp4','mp3']) {
