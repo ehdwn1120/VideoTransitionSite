@@ -20,10 +20,23 @@ function setBusy(value) {
   $('cancel').hidden = !value;
   $('engine-status').textContent = value ? '처리 중' : '대기 중';
 }
+function selectionMessage(message, error = false) {
+  $('selection-message').textContent = message;
+  $('selection-message').dataset.error = String(error);
+}
+function resetSelection() {
+  file = null; $('file').value = ''; clearResult();
+  if (sourceURL) URL.revokeObjectURL(sourceURL); sourceURL = null;
+  $('source-video').removeAttribute('src'); $('source-video').load();
+  $('source-image').removeAttribute('src'); $('source-preview').hidden = true;
+  $('file-title').textContent = '이미지나 영상을 여기에 드롭하세요';
+  $('file-meta').textContent = '또는 클릭하여 파일 선택';
+  $('progress').hidden = true; setBusy(false);
+}
 function selectFile(next) {
   if (busy) return;
   let nextKind;
-  try { nextKind = detectMedia(next); if (nextKind === 'video') validateFile(next); } catch (error) { status(error.message); $('file').value = ''; return; }
+  try { nextKind = detectMedia(next); if (nextKind === 'video') validateFile(next); } catch (error) { resetSelection(); const message = `${next.name} (${size(next.size)}) — ${error.message}`; selectionMessage(message, true); status(message); return; }
   clearResult();
   if (sourceURL) URL.revokeObjectURL(sourceURL);
   file = next;
@@ -33,31 +46,33 @@ function selectFile(next) {
   updateOptions();
   $('file-title').textContent = file.name;
   $('file-meta').textContent = `${mediaKind === 'image' ? '이미지' : '영상'} · ${size(file.size)} · 클릭하여 파일 변경`;
+  selectionMessage(`선택 완료: ${file.name} · ${size(file.size)}. 아래에서 변환 실행을 눌러 주세요.`);
+  setBusy(false);
   sourceURL = URL.createObjectURL(file);
   $('source-video').removeAttribute('src'); $('source-video').load();
   $('source-image').removeAttribute('src');
-  $('source-video').hidden = mediaKind === 'image';
+  const isAVI = /\.avi$/i.test(file.name) || /(?:avi|msvideo)/i.test(file.type);
+  $('source-video').hidden = mediaKind === 'image' || isAVI;
   $('source-image').hidden = mediaKind !== 'image';
-  $(mediaKind === 'image' ? 'source-image' : 'source-video').src = sourceURL;
+  if (!isAVI) $(mediaKind === 'image' ? 'source-image' : 'source-video').src = sourceURL;
+  else selectionMessage(`선택 완료: ${file.name} · ${size(file.size)}. AVI 원본 미리보기 없이 변환할 수 있습니다. 아래에서 변환 실행을 눌러 주세요.`);
   $('source-preview').hidden = false;
   $('progress').hidden = true;
   $('logs').textContent = '';
   status('파일 준비 완료. 출력 설정을 확인하고 변환을 실행하세요.');
   setBusy(false);
 }
-$('file').addEventListener('change', e => { if (e.target.files[0]) selectFile(e.target.files[0]); });
-$('dropzone').addEventListener('click', () => { $('file').value = ''; $('file').click(); });
+$('file').addEventListener('change', e => { if (e.target.files[0]) selectFile(e.target.files[0]); else selectionMessage('파일을 받지 못했습니다. 기기에 저장한 파일을 다시 선택해 주세요.', true); });
+$('file').addEventListener('click', () => { $('file').value = ''; });
+$('file').addEventListener('cancel', () => { if (!file) selectionMessage('파일 선택이 취소되었습니다. 클라우드 파일은 기기에 내려받은 뒤 다시 선택해 주세요.'); });
 for (const type of ['dragenter', 'dragover']) $('dropzone').addEventListener(type, e => { e.preventDefault(); if (!busy) $('dropzone').classList.add('dragging'); });
 for (const type of ['dragleave', 'drop']) $('dropzone').addEventListener(type, e => { e.preventDefault(); $('dropzone').classList.remove('dragging'); });
 $('dropzone').addEventListener('drop', e => { if (e.dataTransfer.files.length > 1) { status('한 번에 한 파일씩 선택해 주세요.'); return; } if(e.dataTransfer.files[0]) selectFile(e.dataTransfer.files[0]); });
 window.addEventListener('dragover', e => e.preventDefault());
 window.addEventListener('drop', e => e.preventDefault());
 $('remove').addEventListener('click', () => {
-  file = null; $('file').value = ''; clearResult();
-  URL.revokeObjectURL(sourceURL); sourceURL = null;
-  $('source-video').removeAttribute('src'); $('source-video').load(); $('source-image').removeAttribute('src'); $('source-preview').hidden = true;
-  $('file-title').textContent = '이미지나 영상을 여기에 드롭하세요'; $('file-meta').textContent = '또는 클릭하여 파일 선택';
-  $('progress').hidden = true; status('변환할 이미지나 영상을 선택하세요.'); setBusy(false);
+  resetSelection(); selectionMessage('파일을 제거했습니다. 새 파일을 선택해 주세요.');
+  status('변환할 이미지나 영상을 선택하세요.');
 });
 function updateOptions() {
   const value = options();
