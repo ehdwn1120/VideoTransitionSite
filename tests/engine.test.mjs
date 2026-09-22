@@ -9,7 +9,9 @@ globalThis.self = { location: { href: import.meta.url } };
 test('Real core: requested conversions decode, scale and fail safely',async()=>{
  const core = await createCore({wasmBinary:await readFile('node_modules/@ffmpeg/core/dist/esm/ffmpeg-core.wasm')});
  for(const ext of ['mp4','webm']) core.FS.writeFile(`input.${ext}`,await readFile(`tests/fixtures/sample.${ext}`));
- for(const [input,format] of [['input.webm','mp4'],['input.mp4','gif'],['input.mp4','mp3']]) {
+ core.reset();
+ assert.equal(core.exec('-i','input.mp4','-c:v','mpeg4','-c:a','libmp3lame','input.avi'),0);
+ for(const [input,format] of [['input.webm','mp4'],['input.mp4','gif'],['input.mp4','mp3'],['input.avi','mp4'],['input.avi','gif'],['input.avi','mp3']]) {
    core.reset();
    assert.equal(core.exec(...buildArgs(input,{format,resolution:'480',quality:'balanced',fps:10,duration:1})),0);
    const output=`output.${format}`;

@@ -45,7 +45,7 @@ npm run preview
 
 ## 동작과 제한
 
-입력: MP4 / WebM / MOV / MKV / M4V, 200MiB 이하. 내부 코덱에 따라 지원 여부가 달라집니다. 출력: MP4 (H.264/AAC), GIF (최대 30초), MP3. 해상도는 높이 기준이며 업스케일하지 않습니다. 품질 기반 압축이므로 목표 바이트 크기를 보장하지 않습니다. 큰 파일은 메모리 제한으로 실패할 수 있습니다.
+입력: MP4 / WebM / MOV / MKV / M4V / AVI, 200MiB 이하. 내부 코덱에 따라 지원 여부가 달라집니다. 출력: MP4 (H.264/AAC), GIF (최대 30초), MP3. 해상도는 높이 기준이며 업스케일하지 않습니다. 품질 기반 압축이므로 목표 바이트 크기를 보장하지 않습니다. 큰 파일은 메모리 제한으로 실패할 수 있습니다.
 
 변환 엔진은 실행 시에만 로드합니다. 완료·실패·취소 시 Worker를 종료해 작업 메모리를 해제합니다. 결과 Blob은 다운로드와 미리보기를 위해 유지하고 파일 제거·설정 변경·페이지 종료 시 해제합니다. 출력 파일은 서버에 저장되지 않습니다.
 
@@ -81,8 +81,8 @@ node scripts/create-fixture.mjs
 
 ### 이미지 자동 감지 및 변환
 
-같은 업로드 창에서 JPG/JPEG·PNG·WebP는 이미지 옵션, MP4·WebM·MOV·MKV·M4V는 영상 옵션으로 전환됩니다. `src/modules/media.js`는 종류 판별·크기 계산·이미지 포맷 정의를, `src/modules/image-engine.js`는 디코딩과 Canvas 인코딩·취소·자원 해제를 담당합니다. 영상 엔진과 독립적으로 동작하며 이미지 작업에는 FFmpeg 다운로드가 발생하지 않습니다.
+같은 업로드 창에서 JPG/JPEG·PNG·WebP는 이미지 옵션, MP4·WebM·MOV·MKV·M4V·AVI는 영상 옵션으로 전환됩니다. `src/modules/media.js`는 종류 판별·크기 계산·이미지 포맷 정의를, `src/modules/image-engine.js`는 디코딩과 Canvas 인코딩·취소·자원 해제를 담당합니다. 영상 엔진과 독립적으로 동작하며 이미지 작업에는 FFmpeg 다운로드가 발생하지 않습니다.
 
 정지 이미지에 한해 최대 200MB/4천만 픽셀을 지원합니다. PNG·WebP 투명도를 유지하고 JPG의 투명 영역은 흰색으로 채웁니다. 원본 메타데이터는 복사하지 않습니다. 움직이는 PNG/WebP, GIF·HEIC·AVIF 입력은 지원하지 않습니다.
 
-브라우저 통합 테스트: 개발 서버를 켠 후 `TEST_URL=http://127.0.0.1:4175 node tests/browser.mjs`를 실행합니다. Playwright Chromium이 필요하며 기존 설치를 사용할 경우 `BROWSER_PATH`에 실행 파일 경로를 지정할 수 있습니다. 실제 이미지 9개 변환 조합, 투명도·해상도·다운로드, 오류 및 취소 처리, 영상 3개 변환 조합, 모바일 가로 넘침을 검사합니다.
+브라우저 통합 테스트: `node scripts/create-fixture.mjs`로 테스트용 영상을 만든 뒤 개발 서버를 켜고 `TEST_URL=http://127.0.0.1:4175 node tests/browser.mjs`를 실행합니다. Playwright Chromium이 필요하며 기존 설치를 사용할 경우 `BROWSER_PATH`에 실행 파일 경로를 지정할 수 있습니다. 실제 이미지 9개 변환 조합, 투명도·해상도·다운로드, 오류 및 취소 처리, 기존 영상 및 AVI → MP4·GIF·MP3 변환 조합, 모바일 가로 넘침을 검사합니다.

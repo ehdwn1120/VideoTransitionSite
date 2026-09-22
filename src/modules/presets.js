@@ -1,3 +1,4 @@
+import { detectMedia } from './media.js';
 export const AUDIO_BITRATES = { mp4: '128k', mp3: { high: '256k', balanced: '192k', small: '128k' } };
 export function describeOutput({format, resolution, quality, fps, duration}) {
   const qualityLabel = { high: '높은 품질', balanced: '균형 잡힌 품질', small: '작은 파일' }[quality];
@@ -27,7 +28,5 @@ export function buildArgs(input, options) {
   return [...base, '-vf', scale, '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', { high: '20', balanced: '26', small: '32' }[quality], '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', AUDIO_BITRATES.mp4, '-movflags', '+faststart', output];
 }
 export function validateFile(file) {
-  if (!file || !/\.(mp4|webm|mov|mkv|m4v)$/i.test(file.name)) throw new Error('MP4, WebM, MOV, MKV, M4V 파일을 선택해 주세요.');
-  if (!file.size) throw new Error('빈 파일은 변환할 수 없습니다.');
-  if (file.size > 200 * 1024 * 1024) throw new Error('안정적인 브라우저 처리를 위해 200MB 이하 파일을 선택해 주세요.');
+  if (detectMedia(file) !== 'video') throw new Error('영상 파일을 선택해 주세요.');
 }

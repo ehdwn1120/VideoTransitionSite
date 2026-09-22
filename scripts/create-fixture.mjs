@@ -12,3 +12,7 @@ core.reset();
 core.exec('-i','sample.webm','-c:v','libx264','-pix_fmt','yuv420p','-c:a','aac','sample.mp4');
 await writeFile('tests/fixtures/sample.mp4',core.FS.readFile('sample.mp4'));
 console.log('Created one-second synthetic WebM and MP4 fixtures.');
+
+core.reset();
+if(core.exec('-i','sample.mp4','-c:v','mpeg4','-c:a','libmp3lame','sample.avi') !== 0) throw new Error('AVI fixture failed');
+await writeFile('tests/fixtures/sample.avi',core.FS.readFile('sample.avi'));

@@ -1,3 +1,4 @@
+export const videoExtensions = ['mp4', 'webm', 'mov', 'mkv', 'm4v', 'avi'];
 export const imageFormats = {
   jpg: { label: 'JPG — 사진', mime: 'image/jpeg' },
   png: { label: 'PNG — 투명 이미지', mime: 'image/png' },
@@ -8,8 +9,8 @@ export function detectMedia(file) {
   if (file.size > 200 * 1024 * 1024) throw new Error('200MB 이하 파일을 선택해 주세요.');
   const ext = file.name.split('.').at(-1).toLowerCase();
   if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) return 'image';
-  if (['mp4', 'webm', 'mov', 'mkv', 'm4v'].includes(ext)) return 'video';
-  throw new Error('이미지는 JPG·PNG·WebP, 영상은 MP4·WebM·MOV·MKV·M4V를 지원합니다. GIF·HEIC·AVIF 이미지는 지원하지 않습니다.');
+  if (videoExtensions.includes(ext)) return 'video';
+  throw new Error('이미지는 JPG·PNG·WebP, 영상은 MP4·WebM·MOV·MKV·M4V·AVI를 지원합니다. GIF·HEIC·AVIF 이미지는 지원하지 않습니다.');
 }
 export function imageDimensions(width, height, resolution) {
   if (!['original', '1080', '720', '480'].includes(resolution)) throw new Error('해상도를 확인해 주세요.');

@@ -48,7 +48,7 @@ try {
  });assert.deepEqual(safety,{cancelled:true,rejected:true});
  console.log('PASS corrupt image, cancellation, animated image rejection');
  }
- for(const [source,format] of [['webm','mp4'],['mp4','gif'],['mp4','mp3']]) {
+ for(const [source,format] of [['webm','mp4'],['mp4','gif'],['mp4','mp3'],['avi','mp4'],['avi','gif'],['avi','mp3']]) {
   await page.locator('#file').setInputFiles(`tests/fixtures/sample.${source}`);
   assert.deepEqual(await page.locator('#format option').evaluateAll(options=>options.map(o=>o.value)),['mp4','gif','mp3']);
   await page.selectOption('#format',format);if(format==='gif')await page.fill('#duration','1');
