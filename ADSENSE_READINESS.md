@@ -10,15 +10,15 @@
 - 신뢰 정보: 소개, 개인정보처리방침, 문의 페이지. 운영자 ew, 문의 ehh1120@naver.com. 실제 mailto 링크이며 문의가 전송되었다고 가장하는 폼은 없습니다.
 - 모든 페이지에서 소개·개인정보·문의 페이지로 이동할 수 있습니다.
 - 페이지별 제목과 description, 한국어 lang, H1, 반응형 레이아웃, favicon, 404 페이지.
-- 공개 도메인을 설정하면 canonical·Open Graph·Twitter 메타, WebSite/WebPage/WebApplication 또는 Breadcrumb 구조화 데이터, 6개 URL의 sitemap.xml, robots.txt가 생성됩니다.
+- 공개 도메인을 설정하면 canonical·Open Graph·Twitter 메타, WebSite/WebPage/WebApplication 또는 Breadcrumb 구조화 데이터, 12개 URL의 sitemap.xml, robots.txt가 생성됩니다.
 - 구조화 데이터 스크립트는 실제 내용과 일치하며 임의 평점·리뷰를 넣지 않았습니다. CSP 해시도 함께 생성합니다.
-- 광고 스크립트와 대형 빈 광고 영역은 아직 없습니다. 파일 업로드 API, 사용자 계정, 분석 추적 코드도 없습니다.
+- 광고 스크립트와 대형 빈 광고 영역은 아직 없습니다. 파일 업로드 API, 사용자 계정, 자체 분석 추적 코드도 없습니다. 단, 공개 배포에는 Cloudflare RUM 성능 측정 스크립트가 자동 추가되며 2026-09-23 점검에서는 CSP로 실행이 차단됨을 확인했습니다. 호스팅에서 추가되는 코드도 개인정보 고지의 점검 대상입니다.
 
 ## 공개 도메인 확정 후 필요한 일
 
 1. `site.config.json`의 `url` 또는 Cloudflare Pages의 `SITE_URL`을 실제 HTTPS 도메인으로 설정하고 다시 빌드하세요. 현재 공개 주소는 https://morfliq.win 이며 공개 빌드에서 실제 URL의 사이트맵을 생성합니다.
 2. Cloudflare Pages: build command `npm run build`, output directory `dist`. production 브랜치가 main이 아니라면 `PRODUCTION_BRANCH`를 실제 이름으로 설정하세요. 다른 브랜치 빌드는 noindex입니다.
-3. 공개 배포에서 여섯 페이지와 `/sitemap.xml`, `/robots.txt`, 엔진 조각 파일 로딩을 확인하세요. Cloudflare Access 등 로그인 제한 없이 심사 봇이 접근할 수 있어야 합니다.
+3. 공개 배포에서 한국어·영어 12개 페이지와 `/sitemap.xml`, `/robots.txt`, 엔진 조각 파일 로딩을 확인하세요. Cloudflare Access 등 로그인 제한 없이 심사 봇이 접근할 수 있어야 합니다.
 4. Search Console에서 도메인 소유권을 확인하고 사이트맵을 제출할 수 있습니다. 사이트맵 제출은 색인 또는 승인을 보장하지 않습니다.
 5. `npm run check:release`로 도메인·운영자·문의·noindex·사이트맵 상태를 확인하세요.
 
@@ -45,3 +45,7 @@ Google은 독창적이고 유용한 콘텐츠와 명확한 탐색을 강조합�
 장식용 셸 명령과 상태 문구, 반복되는 특징·활용 카드, 고정 버전 라벨을 줄였습니다. MP4의 AAC 128kbps와 MP3의 품질별 비트레이트를 구분하고 GIF는 앞부분만 지원한다고 명시합니다. 설정 요약은 실제 인코딩 설정과 공용 상수를 사용합니다.
 
 검색용으로 숨긴 문구, 키워드 나열, 가짜 후기·평점은 추가하지 않습니다. 메인 페이지의 실사용 안내와 별도 상세 가이드, 정책·문의 링크를 유지합니다. 디자인·문구 변경 자체가 검색 노출이나 AdSense 승인을 보장하지 않습니다. 공개 도메인의 기본 검색 허용 설정은 확인했습니다. 광고 활성화 및 동의 설정은 별도 점검이 필요합니다.
+
+## 2026-09-23 공개 배포 점검
+
+한국어·영어 12개 페이지는 HTTP 200, 고유 canonical, index 허용, 정책·문의·소개 링크가 정상입니다. 존재하지 않는 경로는 404, robots.txt·ads.txt·sitemap.xml은 200으로 응답합니다. 광고 스크립트는 관찰되지 않았습니다. Cloudflare 성능 스크립트가 추가되는 실제 동작과 불일치하던 소개·개인정보 문구를 양쪽 언어에서 수정했습니다. 이 점검은 심사 승인이나 모든 정책에 대한 법적 보증이 아닙니다.
