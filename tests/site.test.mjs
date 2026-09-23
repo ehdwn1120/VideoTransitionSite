@@ -32,7 +32,7 @@ test('Production sitemap, canonical, structured data and preview noindex',async(
  const run=()=>execFileSync(process.execPath,[resolve('scripts/seo.mjs')],{cwd:dir,env});
  run();run();
  const sitemap=await readFile(join(dir,'dist/sitemap.xml'),'utf8');
- assert.equal((sitemap.match(/<loc>/g)||[]).length,6);assert.match(sitemap,/<loc>https:\/\/morfliq.example\/contact<\/loc>/);
+ assert.equal((sitemap.match(/<loc>/g)||[]).length,12);assert.match(sitemap,/<loc>https:\/\/morfliq.example\/contact<\/loc>/);
  const robots=await readFile(join(dir,'dist/robots.txt'),'utf8');assert.match(robots,/Sitemap: https:\/\/morfliq.example\/sitemap.xml/);
  const headers=await readFile(join(dir,'dist/_headers'),'utf8');
  for(const page of pages){

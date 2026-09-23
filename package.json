@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "build": "node scripts/prepare-core.mjs && vite build && node scripts/seo.mjs",
+    "dev": "node scripts/localize.mjs && vite --host 127.0.0.1",
+    "build": "node scripts/localize.mjs && node scripts/prepare-core.mjs && vite build && node scripts/seo.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --test tests/*.test.mjs",
     "check:release": "node scripts/check-release.mjs"

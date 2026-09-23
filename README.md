@@ -51,7 +51,7 @@ npm run preview
 
 ## 운영자 및 공개 설정
 
-문의: ehh1120@naver.com, 운영자: ew. `site.config.json`에 저장되어 있습니다. 공개 도메인은 `https://morfliq.win`입니다. 이 주소를 기준으로 사이트맵 6개 URL과 canonical, 구조화 데이터가 빌드에 반영됩니다. `CONTACT_EMAIL`, `OPERATOR_NAME`, `SITE_URL` 환경 변수로 덮어쓸 수 있습니다. Cloudflare의 production 브랜치가 main이 아니면 `PRODUCTION_BRANCH`도 설정하세요. 프리뷰 브랜치 및 `SITE_NOINDEX=1` 빌드는 noindex입니다.
+문의: ehh1120@naver.com, 운영자: ew. `site.config.json`에 저장되어 있습니다. 공개 도메인은 `https://morfliq.win`입니다. 이 주소를 기준으로 사이트맵 12개 URL과 canonical, 구조화 데이터가 빌드에 반영됩니다. `CONTACT_EMAIL`, `OPERATOR_NAME`, `SITE_URL` 환경 변수로 덮어쓸 수 있습니다. Cloudflare의 production 브랜치가 main이 아니면 `PRODUCTION_BRANCH`도 설정하세요. 프리뷰 브랜치 및 `SITE_NOINDEX=1` 빌드는 noindex입니다.
 
 `npm run check:release`로 공개 설정 누락을 점검하세요. 현재 공개 도메인이 설정되어 이 검사를 통과합니다. 기술·콘텐츠 점검 내역과 AdSense 연결 시 남은 단계는 [ADSENSE_READINESS.md](ADSENSE_READINESS.md)에 정리했습니다. AdSense 승인은 Google이 판단하며 AdSense 소유확인 메타 태그와 ads.txt가 있으며, 계정 승인 상태는 별도 확인이 필요합니다.
 
@@ -90,3 +90,11 @@ node scripts/create-fixture.mjs
 영상 입력은 WORKERFS Blob 마운트로 필요한 부분씩 읽습니다. 원본 전체의 arrayBuffer/MEMFS 복사를 피하지만 결과 파일과 인코더 메모리는 별도로 필요하며 1.1GB 실파일의 모바일 성공을 보장하지 않습니다.
 
 `node tests/large-video.mjs`는 짧은 AVI 뒤에 빈 영역을 덧붙인 1.1GiB 합성 파일로 선택 경계·경고·WORKERFS 읽기를 검사합니다. 고해상도 1.1GB 실영상의 메모리 부하를 재현하는 테스트는 아닙니다.
+
+## 한국어·영어 지원
+
+오른쪽 위 언어 메뉴에서 한국어/English를 선택합니다. 첫 홈페이지 방문은 브라우저의 첫 번째 선호 언어(한국어 이외는 영어)를 따릅니다. 선택은 `morfliq-language`에 저장하며, 저장소를 차단한 브라우저에서도 `lang` 쿼리로 수동 전환이 가능합니다. 명시적 `/en/` 및 가이드 링크는 자동으로 다른 언어로 이동하지 않습니다. 파일 선택 후 전환은 재선택 안내를 표시하고, 변환 중에는 언어 변경을 잠급니다.
+
+공통 UI·변환 메시지 번역은 `src/locales/en.json`, 언어 처리 공용 함수는 `src/modules/i18n.js`, 영어 문서 본문은 `content/en/`에서 관리합니다. `scripts/localize.mjs`가 한국어 홈페이지와 공통 헤더/푸터를 바탕으로 `en/*.html`을 생성하므로 생성 파일을 직접 수정하지 마세요. `npm run dev`와 `npm run build`가 자동 생성합니다. 한국어 문구를 변경할 때 대응 번역 키도 갱신하세요.
+
+언어별 canonical과 상호 hreflang, 12개 URL 사이트맵을 생성합니다. 영어 브라우저 통합 검사: `PRODUCTION_TEST=1 TEST_LOCALE=en-US TEST_URL=http://127.0.0.1:4173 node tests/browser.mjs`. 언어 선택·저장소 차단·모바일·변환 잠금 검사는 `TEST_URL=http://127.0.0.1:4173 node tests/language-browser.mjs`로 실행합니다. 해외 방문자 수는 이 변경으로 측정되지 않으며 분석 도구의 국가별 통계에서 별도로 확인해야 합니다.

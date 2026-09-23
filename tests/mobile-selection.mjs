@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const browser=await chromium.launch({headless:true,...(process.env.BROWSER_PATH?{executablePath:process.env.BROWSER_PATH}:{})});
 try {
-const page=await browser.newPage({...devices['Pixel 7']});
+const page=await browser.newPage({...devices['Pixel 7'],locale:'ko-KR'});
 await page.goto(process.env.TEST_URL || 'http://127.0.0.1:4173');
 const chooser=page.waitForEvent('filechooser');await page.locator('#file').tap();await (await chooser).setFiles('tests/fixtures/sample.avi');
 assert.match(await page.locator('#selection-message').textContent(),/선택 완료.*sample.avi/);

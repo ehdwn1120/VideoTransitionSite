@@ -7,5 +7,5 @@ if(!(process.env.OPERATOR_NAME || config.operatorName)) missing.push('운영자�
 const html=await readFile('dist/index.html','utf8');
 if(html.includes('content="noindex')) missing.push('공개 빌드의 noindex 해제: 도메인 설정 후 다시 빌드');
 const sitemap=await readFile('dist/sitemap.xml','utf8');
-if((sitemap.match(/<loc>/g)||[]).length!==6) missing.push('공개 URL 6개가 포함된 사이트맵 생성');
+if((sitemap.match(/<loc>/g)||[]).length!==12) missing.push('공개 URL 12개가 포함된 사이트맵 생성');
 if(missing.length){console.error('심사 제출 전 미완료 항목:\n- '+missing.join('\n- '));process.exitCode=1;}else console.log('기술적 공개 설정 확인 완료. AdSense 계정 승인 및 실제 공개 URL 검토는 별도입니다.');

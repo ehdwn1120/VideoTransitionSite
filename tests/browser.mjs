@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 const browser = await chromium.launch({headless:true, ...(process.env.BROWSER_PATH ? {executablePath:process.env.BROWSER_PATH} : {})});
 try {
- const page = await browser.newPage({acceptDownloads:true});
+ const page = await browser.newPage({acceptDownloads:true,locale:process.env.TEST_LOCALE || 'ko-KR'});
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
  const engineRequests=[];page.on('request',r=>{if(r.url().includes('/engine/'))engineRequests.push(r.url());});
  await page.goto(process.env.TEST_URL || 'http://127.0.0.1:4175');
@@ -35,7 +35,7 @@ try {
  }
  assert.equal(engineRequests.length,0,'Image conversions must not load FFmpeg');
  await page.locator('#file').setInputFiles({name:'broken.png',mimeType:'image/png',buffer:Buffer.from('broken')});
- await page.click('#convert');await page.waitForFunction(()=>document.querySelector('#status-text').textContent.includes('오류:'));
+ await page.click('#convert');await page.waitForFunction(()=>document.querySelector('#status-text').textContent.includes(document.documentElement.lang === 'en' ? 'Error:' : '오류:'));
  assert.equal(await page.locator('#result').isVisible(),false);
  if (!process.env.PRODUCTION_TEST) {
  const safety=await page.evaluate(async()=>{
