@@ -181,5 +181,16 @@
   "오류: {message}": "Error: {message}",
   "높이 최대 {height}px": "Height up to {height}px",
   "MP3 · {bitrate} · 오디오만 저장": "MP3 · {bitrate} · Audio only",
-  "GIF · 시작부터 {duration}초 · {fps}fps · {height} · 소리 없음": "GIF · First {duration}s · {fps}fps · {height} · No audio"
+  "GIF · 시작부터 {duration}초 · {fps}fps · {height} · 소리 없음": "GIF · First {duration}s · {fps}fps · {height} · No audio",
+  "무료 이미지·영상 변환기 — 서버 업로드 없이 | Morfliq": "Free Image & Video Converter — No Uploads | Morfliq",
+  "서버에 파일을 업로드하지 않는 무료 이미지·영상 변환기 Morfliq. WebP·PNG·JPG 이미지 변환, AVI·WebM에서 MP4 변환, 영상 앞부분 GIF 만들기와 MP3 추출을 브라우저에서 처리하세요.": "Convert images and videos for free without uploading files. Morfliq converts WebP, PNG and JPG images, AVI or WebM to MP4, video beginnings to GIF, and audio to MP3 in your browser.",
+  "Morfliq — 무료 이미지·영상 변환기": "Morfliq — Free Image & Video Converter",
+  "설치·회원가입 없이 이미지와 비디오를 변환하세요. 파일은 서버에 업로드하지 않고 내 기기에서 처리합니다.": "Convert images and videos without installation or registration. Files are processed on your device, without server uploads.",
+  "무료 이미지·영상 변환기.": "Free image & video converter.",
+  "파일은 내 기기에서.": "Files stay on your device.",
+  "Morfliq 로컬 변환기는 설치·회원가입 없이 이미지와 비디오를 변환합니다. 파일을 서버에 업로드하거나 보관하지 않으며, 결과는 직접 다운로드할 수 있습니다.": "Morfliq is a local converter for images and videos. No installation or registration is needed. Files are not uploaded or stored on a server; download the result to your device.",
+  "JPG·PNG·WebP 이미지 변환": "JPG, PNG and WebP image conversion",
+  "AVI·WebM → MP4 변환": "AVI / WebM to MP4",
+  "MP4 → GIF 만들기": "MP4 to GIF",
+  "MP4 → MP3 추출": "MP4 to MP3"
 }

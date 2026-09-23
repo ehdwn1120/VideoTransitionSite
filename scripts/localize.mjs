@@ -15,7 +15,7 @@ await writeFile('en/index.html',translate(home));
 const header=translate(home.match(/<header[\s\S]*?<\/header>/)[0]);
 const footer=translate(home.match(/<footer[\s\S]*?<\/footer>/)[0]);
 const meta={
- guide:['Conversion guide','How to convert images and videos, choose quality and resolution, and troubleshoot common errors.'],
+ guide:['How to convert WebP to JPG and AVI to MP4','Convert WebP to JPG, AVI or WebM to MP4, and video to GIF or MP3 without uploads. Learn the settings, size limits and troubleshooting steps.'],
  formats:['Image, video and audio formats','Compare JPG, PNG, WebP, MP4, WebM, AVI, GIF and MP3, and learn how codecs affect conversion.'],
  about:['About Morfliq','A browser-based image and video converter operated by ew. Files are processed locally without uploads.'],
  privacy:['Privacy policy','How Morfliq handles your files, browser memory, language preference and hosting requests.'],
