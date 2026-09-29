@@ -12,9 +12,11 @@ test('Every page has Morfliq metadata, one h1 and working policy links',async()=
   assert.match(html,/<html lang="ko"/);assert.match(html,/<title>[^<]*Morfliq/);
   assert.equal((html.match(/<h1[ >]/g)||[]).length,1);
   assert.ok(!html.includes('FRAME'));assert.match(html,/name="description"/);
-  for(const dest of ['about','privacy','contact']) assert.ok(html.includes(`href="/${dest}.html"`));
+  for(const dest of ['about','privacy','contact']) assert.ok(html.includes(`href="/${dest}"`));
   for(const match of html.matchAll(/(?:href|src)="(\/[^"#?]*)/g)) {
-   const target=match[1]==='/'?'/index.html':match[1];
+   const raw=match[1];
+   const target=raw.endsWith('/')?raw+'index.html':/\.[^/]+$/.test(raw)?raw:raw+'.html';
+   assert.ok(!/^\/(?:en\/)?(?:guide|formats|about|privacy|contact)\.html$/.test(raw),'Navigation must use canonical URLs');
    await readFile(`dist${target}`);
   }
  }

@@ -47,7 +47,7 @@ for (const {page,lang,pathKey} of pages) {
     if (lang === 'en') block = `${operator ? `<p>Operator: ${escape(operator)}</p>` : ''}${contact ? `<p>Email: <a class="contact-link" href="mailto:${escape(contact)}">${escape(contact)}</a></p><p>The link opens your email app. This website does not send files automatically.</p>` : '<p>A contact email has not been published yet.</p>'}`;
     html = html.replace(/<!--CONTACT_DETAILS_START-->[\s\S]*?<!--CONTACT_DETAILS_END-->/,`<!--CONTACT_DETAILS_START-->${block}<!--CONTACT_DETAILS_END-->`);
   }
-  if (page === 'about' && operator) html=html.replace(/<!--OPERATOR_START-->[\s\S]*?<!--OPERATOR_END-->/,`<!--OPERATOR_START--><p>운영자: ${escape(operator)}. 서비스 문의는 <a href="/contact.html">문의 페이지</a>에서 안내합니다.</p><!--OPERATOR_END-->`);
+  if (page === 'about' && operator) html=html.replace(/<!--OPERATOR_START-->[\s\S]*?<!--OPERATOR_END-->/,`<!--OPERATOR_START--><p>운영자: ${escape(operator)}. 서비스 문의는 <a href="/contact">문의 페이지</a>에서 안내합니다.</p><!--OPERATOR_END-->`);
   if (page === 'about' && operator && lang === 'en') html=html.replace(/<!--OPERATOR_START-->[\s\S]*?<!--OPERATOR_END-->/,`<!--OPERATOR_START--><p>Operator: ${escape(operator)}. See the <a href="/en/contact">contact page</a> for support.</p><!--OPERATOR_END-->`);
   await writeFile(path, html);
 }
