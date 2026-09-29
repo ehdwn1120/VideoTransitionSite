@@ -1,3 +1,4 @@
+import {relatedSitesMarkup} from './lib/related-sites.mjs';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 const translations=JSON.parse(await readFile('src/locales/en.json','utf8'));
 const escape = value => value.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;');
@@ -8,6 +9,14 @@ function translate(html) {
  .replace('lang="ko"','lang="en"').replace('content="ko_KR"','content="en_US"')
  .replace(/href="\/(?!src\/|favicon|en\/)([^"#]*)(#[^"]*)?"/g, (_,path,hash='')=>`href="/en/${path.replace(/\.html$/,'')}${hash}"`)
  .replace('value="ko" selected','value="ko"').replace('value="en"','value="en" selected');
+}
+// Keep Korean source headers and generated English headers in sync.
+for (const page of ['index','guide','formats','about','privacy','contact']) {
+ const path = `${page}.html`;
+ let html = await readFile(path, 'utf8');
+ html = html.replace(/<!--RELATED_SITES_START-->[\s\S]*?<!--RELATED_SITES_END-->/g, '');
+ html = html.replace('<a href="/about">소개</a></nav>', `<a href="/about">소개</a><!--RELATED_SITES_START-->${relatedSitesMarkup()}<!--RELATED_SITES_END--></nav>`);
+ await writeFile(path, html);
 }
 const home=await readFile('index.html','utf8');
 await mkdir('en',{recursive:true});

@@ -203,5 +203,15 @@
   "동영상 용량을 줄이려면": "How to reduce video file size",
   "사진을 500KB·1MB 이하로 줄이고 싶다면": "Need a photo under 500KB or 1MB?",
   "같은 운영자가 만든 SlimPic에서 목표 용량을 정해 이미지 압축을 시도해 보세요. JPG·PNG·WebP, 파일당 최대 50MB를 지원하는 이미지 전용 도구입니다. Morfliq에서 변환한 결과는 먼저 다운로드한 뒤 SlimPic에서 직접 선택하세요.": "Try setting a target image size in SlimPic, another tool by the same operator. It supports JPG, PNG and WebP images up to 50MB each, not videos. Download your Morfliq result first, then select it yourself in SlimPic.",
-  "SlimPic에서 사진 용량 줄이기 ↗ (새 탭)": "Reduce photo size with SlimPic ↗ (new tab)"
+  "SlimPic에서 사진 용량 줄이기 ↗ (새 탭)": "Reduce photo size with SlimPic ↗ (new tab)",
+  "다른 사이트": "Other sites",
+  "사진 용량 줄이기": "Compress photos",
+  "새 탭에서 열립니다": "Opens in a new tab",
+  "이미지 압축 · SlimPic": "Image compression · SlimPic",
+  "사진 용량을 줄이려면": "To reduce photo size",
+  "500KB, 1MB처럼 필요한 용량을 정해 사진을 줄여 보세요.": "Set a target such as 500KB or 1MB to reduce your photo size.",
+  "JPG · PNG · WebP / 파일당 최대 50MB": "JPG · PNG · WebP / Up to 50MB per file",
+  "변환한 파일을 다운로드한 뒤 SlimPic에서 선택하세요.": "Download your converted file, then select it in SlimPic.",
+  "SlimPic 열기 ↗": "Open SlimPic ↗",
+  "같은 운영자의 이미지 전용 도구 · 새 탭": "Image tool by the same operator · New tab"
 }

@@ -1,3 +1,4 @@
+import './modules/related-sites.js';
 import { currentLanguage, preferredLanguage, languagePath } from './modules/i18n.js';
 const key = 'morfliq-language';
 let saved;
