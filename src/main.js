@@ -1,3 +1,5 @@
+import { formatBytes as size, sizeChange } from './modules/file-size.js';
+import { createWorkGuard } from './modules/work-guard.js';
 import { t } from './modules/i18n.js';
 import { ConversionEngine } from './modules/engine.js';
 import { presets, buildArgs, validateFile, describeOutput } from './modules/presets.js';
@@ -8,11 +10,13 @@ let engine = new ConversionEngine();
 let mediaKind = 'video';
 let file = null, sourceURL = null, resultURL = null, busy = false, run = 0;
 const status = (text) => { $('status-text').textContent = text; };
-const size = (bytes) => `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+const workGuard = createWorkGuard();
+let pendingDownload = false;
+const syncGuard = () => workGuard.update(busy, pendingDownload);
 const options = () => Object.fromEntries(['format', 'resolution', 'quality', 'fps', 'duration'].map(id => [id, $(id).value]));
-function clearResult() { if (resultURL) URL.revokeObjectURL(resultURL); resultURL = null; $('result').hidden = true; $('download').removeAttribute('href'); $('output-preview').replaceChildren(); }
+function clearResult() { pendingDownload = false; syncGuard(); if (resultURL) URL.revokeObjectURL(resultURL); resultURL = null; $('result').hidden = true; $('download').removeAttribute('href'); $('output-preview').replaceChildren(); }
 function setBusy(value) {
-  busy = value;
+  busy = value; syncGuard();
   if ($('language-select')) $('language-select').disabled = value;
   ['format', 'resolution', 'quality', 'fps', 'duration', 'file', 'dropzone', 'remove'].forEach(id => $(id).disabled = value);
   $('resolution').disabled = value || $('format').value === 'mp3';
@@ -90,7 +94,7 @@ function updateOptions() {
   if (mediaKind === 'image') { $('logs').hidden = true; $('toggle-log').setAttribute('aria-expanded', 'false'); $('toggle-log').textContent = t('로그 보기 +'); }
   $('setting-hint').textContent = mediaKind === 'image' ? (value.format === 'jpg' ? t('투명 영역은 흰색으로 저장합니다. 이미지 메타데이터는 유지하지 않습니다.') : value.format === 'png' ? t('투명도를 유지하고 무손실로 저장합니다. 품질 옵션은 적용되지 않습니다.') : t('투명도를 유지합니다. 브라우저가 WebP 저장을 지원해야 합니다.')) : { mp4: t('MP4 영상 품질을 조절합니다. 오디오는 AAC 128kbps로 고정됩니다.'), gif: t('영상 시작부터 최대 30초. 시작점 지정은 지원하지 않으며 소리는 제외됩니다.'), mp3: t('원본 영상에 오디오 트랙이 있어야 합니다. 해상도는 적용되지 않습니다.') }[value.format];
   $('output-summary').textContent = mediaKind === 'image' ? describeImage(value) : describeOutput(value);
-  clearResult();
+  if (resultURL) status(t('설정이 변경되었습니다. 아래 파일은 이전 변환 결과입니다. 새 설정을 적용하려면 변환 실행을 누르세요.'));
 }
 ['format','resolution','quality','fps','duration'].forEach(id => $(id).addEventListener('change', updateOptions));
 $('toggle-log').addEventListener('click', () => { const expanded = $('logs').hidden; $('logs').hidden = !expanded; $('toggle-log').setAttribute('aria-expanded', String(expanded)); $('toggle-log').textContent = expanded ? t('로그 접기 −') : t('로그 보기 +'); });
@@ -124,8 +128,9 @@ $('convert-form').addEventListener('submit', async e => {
     }
     if (current !== run) return;
     resultURL = URL.createObjectURL(mediaKind === 'image' ? data : new Blob([data], { type: presets[selected.format].mime }));
+    pendingDownload = true; syncGuard();
     $('download').href = resultURL; $('download').download = `${file.name.replace(/\.[^.]+$/, '')}-converted.${selected.format}`;
-    $('result-meta').textContent = `${size(file.size)} → ${size(data.size ?? data.length)} · ${selected.format.toUpperCase()}${dimensions ? ` · ${dimensions}` : ''}`;
+    $('result-meta').textContent = `${size(file.size)} → ${size(data.size ?? data.length)} (${sizeChange(file.size, data.size ?? data.length)}) · ${selected.format.toUpperCase()}${dimensions ? ` · ${dimensions}` : ''}`;
     const preview = document.createElement(mediaKind === 'image' || selected.format === 'gif' ? 'img' : selected.format === 'mp3' ? 'audio' : 'video');
     preview.src = resultURL; if (preview.tagName === 'IMG') preview.alt = t('변환된 이미지 미리보기'); else preview.controls = true;
     $('output-preview').replaceChildren(preview); $('result').hidden = false; $('progress').value = 100;
@@ -134,6 +139,12 @@ $('convert-form').addEventListener('submit', async e => {
     if (current === run) { status(t('오류: {message}', {message:error.message || t('메모리가 부족하거나 파일을 읽을 수 없습니다. 더 작은 파일로 다시 시도해 주세요.')})); $('progress').hidden = true; }
   } finally { if (current === run) setBusy(false); }
 });
+$('download').addEventListener('click', () => {
+  if (!resultURL) return;
+  pendingDownload = false; syncGuard();
+  status(t('다운로드를 요청했습니다. 브라우저에서 저장 여부를 확인하세요.'));
+});
+window.addEventListener('pageshow', event => { if (event.persisted) { resetSelection(); selectionMessage(t('파일을 제거했습니다. 새 파일을 선택해 주세요.')); status(t('변환할 이미지나 영상을 선택하세요.')); } });
 window.addEventListener('pagehide', () => { run++; engine.cancel(); if(sourceURL) URL.revokeObjectURL(sourceURL); clearResult(); });
 
 updateOptions();
