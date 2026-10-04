@@ -218,5 +218,7 @@
   "{percent}% 감소": "{percent}% smaller",
   "{percent}% 증가": "{percent}% larger",
   "설정이 변경되었습니다. 아래 파일은 이전 변환 결과입니다. 새 설정을 적용하려면 변환 실행을 누르세요.": "Settings changed. The file below is the previous result. Select Convert to apply the new settings.",
-  "다운로드를 요청했습니다. 브라우저에서 저장 여부를 확인하세요.": "Download requested. Check that your browser saved the file."
+  "다운로드를 요청했습니다. 브라우저에서 저장 여부를 확인하세요.": "Download requested. Check that your browser saved the file.",
+  "이미지나 영상을 하나 선택하고 필요한 형식으로 저장하세요. 파일은 서버에 보내지 않고 이 브라우저에서 처리합니다.": "Choose one image or video and save it in the format you need. Your file is processed in this browser without uploading it.",
+  "선택했는데 반응이 없거나, 결과가 너무 클 때 →": "No response after selecting a file, or an output that is too large? →"
 }
