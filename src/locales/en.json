@@ -220,5 +220,19 @@
   "설정이 변경되었습니다. 아래 파일은 이전 변환 결과입니다. 새 설정을 적용하려면 변환 실행을 누르세요.": "Settings changed. The file below is the previous result. Select Convert to apply the new settings.",
   "다운로드를 요청했습니다. 브라우저에서 저장 여부를 확인하세요.": "Download requested. Check that your browser saved the file.",
   "이미지나 영상을 하나 선택하고 필요한 형식으로 저장하세요. 파일은 서버에 보내지 않고 이 브라우저에서 처리합니다.": "Choose one image or video and save it in the format you need. Your file is processed in this browser without uploading it.",
-  "선택했는데 반응이 없거나, 결과가 너무 클 때 →": "No response after selecting a file, or an output that is too large? →"
+  "선택했는데 반응이 없거나, 결과가 너무 클 때 →": "No response after selecting a file, or an output that is too large? →",
+  "파일 선택": "Choose a file",
+  "파일을 하나 고르세요. 이미지인지 영상인지에 따라 출력 형식이 바뀝니다.": "Choose one file. The output formats change depending on whether it is an image or a video.",
+  "저장할 형식 선택": "Choose a format",
+  "필요한 형식을 고르고, 크기를 줄이고 싶다면 해상도와 품질을 낮추세요.": "Pick the format you need. Lower resolution and quality if you also want a smaller file.",
+  "결과 저장": "Save the result",
+  "변환 후 파일 다운로드를 누르세요. 탭을 닫으면 저장하지 않은 결과는 사라집니다.": "Select Download file after converting. Closing the tab loses any result you have not saved.",
+  "어떤 설정을 고를지 모르겠다면": "Not sure which settings to use?",
+  "사진이 다른 앱에서 열리지 않을 때": "A photo will not open in another app",
+  "AVI·WebM을 MP4로 저장할 때": "Save AVI or WebM as MP4",
+  "영상에서 소리만 꺼낼 때": "Keep just the audio from a video",
+  "형식만 바꾸면 될까요?": "Is changing the format enough?",
+  "다른 앱에서 열기 위한 변환과 용량을 줄이기 위한 변환은 설정이 다릅니다. 투명 배경이 필요한 사진은 PNG·WebP로, 소리까지 필요한 영상은 MP4로 저장하세요.": "Making a file compatible with another app and making it smaller need different settings. Use PNG or WebP for transparent images, and MP4 for video with sound.",
+  "포맷별 차이 보기 →": "Compare formats →",
+  "다른 앱에서 열기 위한 변환과 용량을 줄이기 위한 변환은 설정이 다릅니다. 투명 배경이 필요한 사진은 PNG·WebP로, 소리까지 필요한 영상은 MP4로 저장하세요. ": "Making a file compatible with another app and making it smaller need different settings. Use PNG or WebP for transparent images, and MP4 for video with sound. "
 }
